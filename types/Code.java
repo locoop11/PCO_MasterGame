@@ -6,21 +6,21 @@ import java.util.List;
 
 public class Code implements Cloneable {
 
-    private final List<Colour> code;
-
-    public Code(List<? extends Colour> code) {
-        if (code == null || code.isEmpty()) {
+    private final List<Colour> codeList;
+    
+    public Code(List<? extends Colour> inputCode) {   /* input code is the codeList used for the constructor of the class */
+        if (inputCode == null || inputCode.isEmpty()) {
             throw new IllegalArgumentException("Code sequence cannot be null or empty.");
         }
-        this.code = new ArrayList<>(code); 
+        codeList = new ArrayList<>(inputCode); 
     }
 
-	public List<Colour> getCode() {
-        return new ArrayList<>(code); // devolve uma cópia da lista com as cores do código.
+	public List<Colour> getCodeList() {
+        return new ArrayList<>(codeList); // devolve uma cópia da lista com as cores do código.
     }
 
 	public int getLength() {
-        return code.size(); // devolve o tamanho da sequência do código
+        return this.getCodeList().size(); // devolve o tamanho da sequência do código
     }
 
 	public int[] howManyCorrect(Code other) {
@@ -35,8 +35,8 @@ public class Code implements Cloneable {
         boolean[] usedInThis = new boolean[this.getLength()];
 
         // conta exactMatches
-        for (int i = 0; i < code.size(); i++) {
-            if (code.get(i).equals(other.code.get(i))) {
+        for (int i = 0; i < codeList.size(); i++) {
+            if (this.getCodeList().get(i).equals(other.getCodeList().get(i))) {
                 exactMatches++;
                 usedInOther[i] = true;
                 usedInThis[i] = true;
@@ -44,10 +44,10 @@ public class Code implements Cloneable {
         }
 
         // conta partialMatches
-        for (int i = 0; i < code.size(); i++) {
+        for (int i = 0; i < codeList.size(); i++) {
             if (!usedInThis[i]) {
                 for (int j = 0; j < other.getLength(); j++) {
-                    if (!usedInOther[j] && code.get(i).equals(other.code.get(j))) {
+                    if (!usedInOther[j] && this.getCodeList().get(i).equals(other.getCodeList().get(j))) {
                         partialMatches++;
                         usedInOther[j] = true;
                         break;
@@ -61,13 +61,13 @@ public class Code implements Cloneable {
 
 	@Override
     public String toString() {
-        return code.toString(); //devolve uma representação deste Code na forma [c1,c2,c3,c4].
+        return this.getCodeList().toString(); //devolve uma representação deste Code na forma [c1,c2,c3,c4].
     }
 
 	@Override
     public Code clone() {
         try {
-            return new Code(this.code); // cria um novo Code usando a lista existente
+            return new Code(this.getCodeList()); // cria um novo Code usando a lista existente
         } catch (Exception e) {
             throw new RuntimeException("Cloning failed", e);
         }
@@ -78,7 +78,6 @@ public class Code implements Cloneable {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Code other = (Code) obj;
-        return this.code.equals(other.code);
+        return this.getCodeList().equals(other.getCodeList());
     }
-
 }

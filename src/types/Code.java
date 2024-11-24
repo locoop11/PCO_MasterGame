@@ -80,4 +80,16 @@ public class Code implements Cloneable {
         Code other = (Code) obj;
         return this.getCodeList().equals(other.getCodeList());
     }
+
+    public static void main(String[] args) {
+        List<Colour> codeList = new ArrayList<>();
+        codeList.add(BinaryColour.BLACK);
+        codeList.add(BinaryColour.WHITE);
+        Code code = new Code(codeList);
+        System.out.println(code);
+        System.out.println(code.getLength());
+        System.out.println(code.clone());
+        System.out.println(code.equals(code.clone()));
+    }
+
 }

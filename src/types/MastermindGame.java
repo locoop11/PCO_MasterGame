@@ -3,7 +3,7 @@ package types;
 
 //Documentation needed.
 
-public interface MastermingGame {
+public interface MastermindGame {
 	
 	public static final int MAX_TRIALS = 100;
 	
@@ -24,3 +24,6 @@ public interface MastermingGame {
 	public boolean wasSecretRevealed();
 
 }
+// Yes, you should create a new .java file for the abstract class.
+// Create a new file named AbstractMastermindGame.java in the same package.
+

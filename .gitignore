@@ -1,3 +1,7 @@
 *.class
 /.metadata/
 .DS_Store
+bin/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
+bin/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
+bin/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst
+bin/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst

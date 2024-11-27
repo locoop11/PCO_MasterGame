@@ -15,12 +15,12 @@ public class Code implements Cloneable {
         codeList = new ArrayList<>(inputCode); 
     }
 
-	public List<Colour> getCodeList() {
+	public List<Colour> getCode() {
         return new ArrayList<>(codeList); // devolve uma cópia da lista com as cores do código.
     }
 
 	public int getLength() {
-        return this.getCodeList().size(); // devolve o tamanho da sequência do código
+        return this.getCode().size(); // devolve o tamanho da sequência do código
     }
 
 	public int[] howManyCorrect(Code other) {
@@ -36,7 +36,7 @@ public class Code implements Cloneable {
 
         // conta exactMatches
         for (int i = 0; i < codeList.size(); i++) {
-            if (this.getCodeList().get(i).equals(other.getCodeList().get(i))) {
+            if (this.getCode().get(i).equals(other.getCode().get(i))) {
                 exactMatches++;
                 usedInOther[i] = true;
                 usedInThis[i] = true;
@@ -47,7 +47,7 @@ public class Code implements Cloneable {
         for (int i = 0; i < codeList.size(); i++) {
             if (!usedInThis[i]) {
                 for (int j = 0; j < other.getLength(); j++) {
-                    if (!usedInOther[j] && this.getCodeList().get(i).equals(other.getCodeList().get(j))) {
+                    if (!usedInOther[j] && this.getCode().get(i).equals(other.getCode().get(j))) {
                         partialMatches++;
                         usedInOther[j] = true;
                         break;
@@ -61,13 +61,13 @@ public class Code implements Cloneable {
 
 	@Override
     public String toString() {
-        return this.getCodeList().toString(); //devolve uma representação deste Code na forma [c1,c2,c3,c4].
+        return this.getCode().toString(); //devolve uma representação deste Code na forma [c1,c2,c3,c4].
     }
 
 	@Override
     public Code clone() {
         try {
-            return new Code(this.getCodeList()); // cria um novo Code usando a lista existente
+            return new Code(this.getCode()); // cria um novo Code usando a lista existente
         } catch (Exception e) {
             throw new RuntimeException("Cloning failed", e);
         }
@@ -78,7 +78,7 @@ public class Code implements Cloneable {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Code other = (Code) obj;
-        return this.getCodeList().equals(other.getCodeList());
+        return this.getCode().equals(other.getCode());
     }
 
     public static void main(String[] args) {

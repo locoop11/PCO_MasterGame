@@ -1,46 +1,61 @@
 package types;
 
-import java.util.List;
-
 public class BullsAndCows extends AbstractMastermindGame {
+
+    private int score;
 
     public BullsAndCows(int seed, int size, Colour[] colours) {
         super(seed, size, colours);
+        this.score = 0;
     }
 
-    @Override
+    public void play (Code trialCode){
+        if (secretCode != null) {
+            startNewRound();  
+        }
+        int[] matchResults = trialCode.howManyCorrect(trialCode);
+        if (matchResults[0] == getSize()) {
+            revealSecret();;
+        }
+        trials.add(trialCode);
+        incrementTrials();  
+        //update score??
+
+        
+    }
+
+
     public int score() {
-        return super.getScore();
+        return score;
     }
-
-    @Override
     public boolean updateScore() {
-        setScore(getScore() + 2000); //2000 pontos quando a ronda termina
+        this.score += 2000;
         return true;
     }
-
-    @Override
-    public boolean isRoundFinished() {
-        // a ronda termina se o código for decifrado
-        if (super.wasSecretRevealed()) {
-            return true;
-        }
-        // Verifica se a última tentativa corresponde ao código secreto 
-        List<Code> trials = super.getTrials();
-        if (!trials.isEmpty() && trials.get(trials.size() - 1).equals(super.getSecretCode())) {
-            revealSecret();
-            return true;
-        }
-        return false;
-    }
-
     @Override
     public Colour hint() {
-        // retorna a primeira cor do código secreto
-        Colour hintColour = super.getSecretCode().getColours().get(0);
-
-        // atualiza o score para metade do valor atual
-        setScore(getScore() / 2);
-
+        Colour hintColour = secretCode.getCode().get(0);
+        this.score /= 2;
         return hintColour;
     }
+    
+    public boolean isRoundFinished() {
+        if (wasSecretRevealed() || getNumberOfTrials() >= MAX_TRIALS) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public void startNewRound(){
+        secretCode = generateSecretCode();
+        
+
+
+    }
+
+    public Code bestTrial() {
+        return secretCode ;
+    }
+}

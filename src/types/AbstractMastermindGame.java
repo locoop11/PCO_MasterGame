@@ -12,8 +12,8 @@ public abstract class AbstractMastermindGame implements MastermindGame {
     private boolean secretRevealed;
     private int size;
     private Colour[] colours;
-    private Code secretCode;
-    private List<Code> trials;
+    protected Code secretCode;
+    protected List<Code> trials;
     private Random random;
 
     public AbstractMastermindGame(int seed, int size, Colour[] colours) {
@@ -24,10 +24,17 @@ public abstract class AbstractMastermindGame implements MastermindGame {
         this.colours = colours;
         this.trials = new ArrayList<>();
         this.random = new Random(seed);
-        this.secretCode = generateSecretCode();
+        this.secretCode = null;
     }
 
-    private Code generateSecretCode() {
+
+
+    public int getSize() {
+        return size;
+    }
+
+
+    protected Code generateSecretCode() {
         Colour[] codeColours = new Colour[size];
         for (int i = 0; i < size; i++) {
             codeColours[i] = colours[random.nextInt(colours.length)];
@@ -39,13 +46,11 @@ public abstract class AbstractMastermindGame implements MastermindGame {
     public int getNumberOfTrials() {
         return numberOfTrials;
     }
-    abstract public int score();
-    abstract boolean isRoundFinished();
-    abstract boolean updateScore();
 
     @Override
     public boolean wasSecretRevealed() {
-        return secretRevealed;
+        
+        return true;
     }
 
     protected void incrementTrials() {
@@ -70,7 +75,7 @@ public abstract class AbstractMastermindGame implements MastermindGame {
         if (secretRevealed) {
             message += "Secret Code: " + secretCode + "\n";
         } else {
-            message += "Secret Code: " + "?".repeat(size) + "\n");
+            message += "Secret Code: " + "?".repeat(size) + "\n";
         }
 
         int start = Math.max(0, trials.size() - 10);
@@ -93,4 +98,6 @@ public abstract class AbstractMastermindGame implements MastermindGame {
     public abstract Colour hint();
 
     public abstract boolean updateScore();
+
+    public abstract int score();
 }

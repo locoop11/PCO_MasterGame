@@ -1,5 +1,8 @@
 package types;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class BullsAndCows extends AbstractMastermindGame {
 
     private int score;
@@ -15,13 +18,11 @@ public class BullsAndCows extends AbstractMastermindGame {
         }
         int[] matchResults = trialCode.howManyCorrect(trialCode);
         if (matchResults[0] == getSize()) {
-            revealSecret();;
+            revealSecret();
         }
-        trials.add(trialCode);
-        incrementTrials();  
-        //update score??
-
+        trials.put(trialCode, matchResults);
         
+        incrementTrials();  
     }
 
 

@@ -1,6 +1,6 @@
 package types;
 
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
 import java.util.Random;
 
@@ -13,7 +13,7 @@ public abstract class AbstractMastermindGame implements MastermindGame {
     private int size;
     private Colour[] colours;
     protected Code secretCode;
-    protected List<Code> trials;
+    protected Map<Code, int[]> trials;
     private Random random;
 
     public AbstractMastermindGame(int seed, int size, Colour[] colours) {
@@ -22,7 +22,7 @@ public abstract class AbstractMastermindGame implements MastermindGame {
         this.secretRevealed = false;
         this.size = size;
         this.colours = colours;
-        this.trials = new ArrayList<>();
+        this.trials = new HashMap<Code, int[]>();
         this.random = new Random(seed);
         this.secretCode = null;
     }
@@ -49,8 +49,12 @@ public abstract class AbstractMastermindGame implements MastermindGame {
 
     @Override
     public boolean wasSecretRevealed() {
-        
-        return true;
+        if (secretRevealed == true) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     protected void incrementTrials() {

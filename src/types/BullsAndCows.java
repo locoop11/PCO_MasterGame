@@ -57,6 +57,16 @@ public class BullsAndCows extends AbstractMastermindGame {
     }
 
     public Code bestTrial() {
-        return secretCode ;
+        Code bestTrial = null;
+        int bestScore = -1;
+        for (Code trial : trials.keySet()) {
+            int[] matchResults = trial.howManyCorrect(secretCode);
+            int currentScore = matchResults[0] * 10 + matchResults[1];
+            if (currentScore > bestScore) {
+                bestScore = currentScore;
+                bestTrial = trial;
+            }
+        }
+        return bestTrial;
     }
 }

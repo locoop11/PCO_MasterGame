@@ -4,6 +4,7 @@ import java.util.*;
 
 public class MultiColourMastermindGame extends AbstractMastermindGame {
     private int numberOfHintsUsed; // Contador de ajudas dadas na ronda atual
+    private int score = 0;
 
     public MultiColourMastermindGame(int seed, int size, Colour[] colours) {
         super(seed, size, colours);
@@ -25,9 +26,13 @@ public class MultiColourMastermindGame extends AbstractMastermindGame {
 
     @Override
     public boolean isRoundFinished() {
-        return wasSecretRevealed() || getNumberOfTrials() >= 10; // Exemplo de critério de término
+        if (wasSecretRevealed() || getNumberOfTrials() >= MAX_TRIALS) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
-
     @Override
     public void startNewRound() {
         this.secretCode = generateSecretCode();
@@ -38,15 +43,13 @@ public class MultiColourMastermindGame extends AbstractMastermindGame {
 
     @Override
     public Colour hint() {
-        if (wasSecretRevealed()) {
-            throw new IllegalStateException("Não é possível pedir dicas após a revelação do código secreto.");
+        if (secretCode == null) {
+            startNewRound();
         }
-
+        Colour hintColour = secretCode.getCode().get(random.nextInt(getSize()));
+        this.score /= 2;
         numberOfHintsUsed++;
-        // Fornece uma cor aleatória presente no código secreto
-        Random random = new Random();
-        Colour hint = secretCode.getCode().get(random.nextInt(getSize()));
-        return hint;
+        return hintColour;
     }
 
     @Override
@@ -75,7 +78,7 @@ public class MultiColourMastermindGame extends AbstractMastermindGame {
 
     @Override
     public int score() {
-        return 0;
+        return score;
     }
 
     private int[] calculateFeedback(Code trial) {

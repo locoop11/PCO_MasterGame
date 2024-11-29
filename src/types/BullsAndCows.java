@@ -31,7 +31,10 @@ public class BullsAndCows extends AbstractMastermindGame {
 
     @Override
     public Colour hint() {
-        Colour hintColour = secretCode.getCode().get(0);
+        if (secretCode == null) {
+            startNewRound();
+        }
+        Colour hintColour = secretCode.getCode().get(random.nextInt(getSize()));
         this.score /= 2;
         return hintColour;
     }

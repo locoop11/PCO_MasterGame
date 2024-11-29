@@ -11,7 +11,7 @@ public abstract class AbstractMastermindGame implements MastermindGame {
     private Colour[] colours;
     protected Code secretCode;
     protected Map<Code, int[]> trials;
-    private Random random;
+    protected Random random;
     protected List<Code> orderOfPlays;
 
 
@@ -20,7 +20,11 @@ public abstract class AbstractMastermindGame implements MastermindGame {
         this.size = size;
         this.colours = colours;
         this.trials = new HashMap<Code, int[]>();
-        this.random = new Random(seed);
+        if ( seed == -1 ) {
+            this.random = new Random();
+        } else {
+            this.random = new Random(seed);
+        }
         this.secretCode = null;
         this.orderOfPlays = new ArrayList<Code>();
     }

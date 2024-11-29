@@ -42,4 +42,5 @@ public enum BinaryColour implements Colour {
 	public BinaryColour[] colours() {
 		return BinaryColour.values();
 	}
+	
 }

@@ -1,28 +1,23 @@
 package types;
 
-import java.util.HashMap;
-import java.util.Map;
 
 public class BullsAndCows extends AbstractMastermindGame {
-
-    private int score;
+    private int score = 0;
 
     public BullsAndCows(int seed, int size, Colour[] colours) {
         super(seed, size, colours);
-        this.score = 0;
     }
 
     public void play (Code trialCode){
-        if (secretCode != null) {
-            startNewRound();  
+        if (secretCode == null) {
+            startNewRound();
         }
-        int[] matchResults = trialCode.howManyCorrect(trialCode);
+        int[] matchResults = trialCode.howManyCorrect(secretCode);
         if (matchResults[0] == getSize()) {
             revealSecret();
         }
-        trials.put(trialCode, matchResults);
         
-        incrementTrials();  
+        incrementTrials(trialCode, matchResults);  
     }
 
 
@@ -33,6 +28,7 @@ public class BullsAndCows extends AbstractMastermindGame {
         this.score += 2000;
         return true;
     }
+
     @Override
     public Colour hint() {
         Colour hintColour = secretCode.getCode().get(0);
@@ -51,9 +47,7 @@ public class BullsAndCows extends AbstractMastermindGame {
 
     public void startNewRound(){
         secretCode = generateSecretCode();
-        
-
-
+        return ;
     }
 
     public Code bestTrial() {
@@ -61,12 +55,29 @@ public class BullsAndCows extends AbstractMastermindGame {
         int bestScore = -1;
         for (Code trial : trials.keySet()) {
             int[] matchResults = trial.howManyCorrect(secretCode);
-            int currentScore = matchResults[0] * 10 + matchResults[1];
+            int currentScore = (matchResults[0] * 10) + matchResults[1];
             if (currentScore > bestScore) {
                 bestScore = currentScore;
                 bestTrial = trial;
             }
-        }
+            if( currentScore == bestScore) {
+                if( trial.toString().compareTo( bestTrial.toString()) < 0 ) {
+                    bestTrial = trial;
+                }
+            }   
+    }
         return bestTrial;
+    }
+
+    public String toString() {
+        String message = "Number of Trials = " + getNumberOfTrials() + "\n" +
+                "Score = " + score + "\n";
+        message += super.toString() + "\n";
+        for (Code codePlayed : orderOfPlays) {
+            message += codePlayed.toString() + "    ";
+            int[] results = trials.get(codePlayed);
+            message += results[0] + " " + results[1] + "\n";
+        }
+        return message;
     }
 }

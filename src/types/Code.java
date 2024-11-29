@@ -9,8 +9,8 @@ public class Code implements Cloneable {
     private final List<Colour> codeList;
     
     public Code(List<? extends Colour> inputCode) {   /* input code is the codeList used for the constructor of the class */
-        if (inputCode == null || inputCode.isEmpty()) {
-            throw new IllegalArgumentException("Code sequence cannot be null or empty.");
+        if (inputCode == null ) {
+            throw new IllegalArgumentException("Code sequence cannot be null.");
         }
         codeList = new ArrayList<>(inputCode); 
     }
@@ -61,7 +61,15 @@ public class Code implements Cloneable {
 
 	@Override
     public String toString() {
-        return this.getCode().toString(); //devolve uma representação deste Code na forma [c1,c2,c3,c4].
+        String returnString = "[";
+        for( int i = 0; i < this.getLength(); i++) {
+            if( i == this.getLength() - 1) {
+                returnString += this.getCode().get(i).toString() + "]";
+            } else {
+                returnString += this.getCode().get(i).toString() + ", ";
+            }
+        }
+        return returnString;
     }
 
 	@Override

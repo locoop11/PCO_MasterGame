@@ -1,30 +1,28 @@
 package types;
 
 import java.util.*;
-import java.util.List;
-import java.util.Random;
 
 
 
 public abstract class AbstractMastermindGame implements MastermindGame {
-    private int numberOfTrials;
-    private int score;
+    private int numberOfTrials = 0;
     private boolean secretRevealed;
     private int size;
     private Colour[] colours;
     protected Code secretCode;
     protected Map<Code, int[]> trials;
     private Random random;
+    protected List<Code> orderOfPlays;
+
 
     public AbstractMastermindGame(int seed, int size, Colour[] colours) {
-        this.numberOfTrials = 0;
-        this.score = 0;
         this.secretRevealed = false;
         this.size = size;
         this.colours = colours;
         this.trials = new HashMap<Code, int[]>();
         this.random = new Random(seed);
         this.secretCode = null;
+        this.orderOfPlays = new ArrayList<Code>();
     }
 
 
@@ -49,44 +47,45 @@ public abstract class AbstractMastermindGame implements MastermindGame {
 
     @Override
     public boolean wasSecretRevealed() {
-        if (secretRevealed == true) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return secretRevealed;
     }
 
-    protected void incrementTrials() {
+    protected void incrementTrials(Code trialCode, int [] matchResults) {
         numberOfTrials++;
+        if( trials.containsKey(trialCode)) {
+            return;
+        }
+        trials.put(trialCode, matchResults);
+        orderOfPlays.add(trialCode);
     }
 
-    protected void setScore(int score) {
-        this.score = score;
-    }
 
     protected void revealSecret() {
         secretRevealed = true;
+        updateScore();
     }
 
     @Override
     public String toString() {
-        String message = "Number of Trials: " + numberOfTrials + "\n" +
-                "Score: " + score + "\n" +
-                "Board:\n";
-
+        String message = "";
 
         if (secretRevealed) {
-            message += "Secret Code: " + secretCode + "\n";
+            message += secretCode.toString() + "\n";
         } else {
-            message += "Secret Code: " + "?".repeat(size) + "\n";
+            message += unrevealedSecretCodeToString() + "\n";
         }
+        return message;
+    }
 
-        int start = Math.max(0, trials.size() - 10);
-        for (int i = start; i < trials.size(); i++) {
-            message += trials.get(i) + "\n";
+    private String unrevealedSecretCodeToString() {
+        String message = "[";
+        for (int i = 0; i < size; i++) {
+            if (i == size - 1) {
+                message += "?]";
+            } else {
+                message += "?, ";
+            }
         }
-
         return message;
     }
 

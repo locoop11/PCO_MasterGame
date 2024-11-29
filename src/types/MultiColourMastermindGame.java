@@ -13,7 +13,7 @@ public class MultiColourMastermindGame extends AbstractMastermindGame {
 
     @Override
     public void play(Code trial) {
-        incrementTrials();
+        //incrementTrials();
         // Verifica se o trial corresponde ao código secreto
         if (trial.equals(secretCode)) {
             revealSecret();
@@ -33,7 +33,7 @@ public class MultiColourMastermindGame extends AbstractMastermindGame {
         this.secretCode = generateSecretCode();
         this.numberOfHintsUsed = 0;
         trials.clear();
-        revealSecret(false);
+        revealSecret();
     }
 
     @Override
@@ -45,7 +45,7 @@ public class MultiColourMastermindGame extends AbstractMastermindGame {
         numberOfHintsUsed++;
         // Fornece uma cor aleatória presente no código secreto
         Random random = new Random();
-        Colour hint = secretCode.getColours().get(random.nextInt(getSize()));
+        Colour hint = secretCode.getCode().get(random.nextInt(getSize()));
         return hint;
     }
 
@@ -69,13 +69,13 @@ public class MultiColourMastermindGame extends AbstractMastermindGame {
         // Reduz o score com base nas ajudas usadas
         baseScore /= (numberOfHintsUsed + 1);
 
-        setScore(score() + baseScore);
+        //setScore(score() + baseScore);
         return true;
     }
 
     @Override
     public int score() {
-        return super.score;
+        return 0;
     }
 
     private int[] calculateFeedback(Code trial) {
@@ -83,8 +83,8 @@ public class MultiColourMastermindGame extends AbstractMastermindGame {
         int correctPosition = 0;
         int correctColour = 0;
 
-        List<Colour> secretColours = secretCode.getColours();
-        List<Colour> trialColours = trial.getColours();
+        List<Colour> secretColours = secretCode.getCode();
+        List<Colour> trialColours = trial.getCode();
 
         // Verifica posições corretas
         for (int i = 0; i < getSize(); i++) {
@@ -101,5 +101,11 @@ public class MultiColourMastermindGame extends AbstractMastermindGame {
         }
 
         return new int[]{correctPosition, correctColour - correctPosition};
+    }
+
+    @Override
+    public Code bestTrial() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'bestTrial'");
     }
 }

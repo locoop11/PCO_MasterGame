@@ -8,35 +8,19 @@ public class BullsAndCows extends AbstractMastermindGame {
         super(seed, size, colours);
     }
 
-    public void play (Code trialCode){
-        if (secretCode == null) {
-            startNewRound();
-        }
-        int[] matchResults = trialCode.howManyCorrect(secretCode);
-        if (matchResults[0] == getSize()) {
-            revealSecret();
-        }
-        
-        incrementTrials(trialCode, matchResults);  
+    @Override
+    public Colour hint() {
+        this.score /= 2;
+        return super.hint();
     }
-
 
     public int score() {
         return score;
     }
+    
     public boolean updateScore() {
         this.score += 2000;
         return true;
-    }
-
-    @Override
-    public Colour hint() {
-        if (secretCode == null) {
-            startNewRound();
-        }
-        Colour hintColour = secretCode.getCode().get(random.nextInt(getSize()));
-        this.score /= 2;
-        return hintColour;
     }
     
     public boolean isRoundFinished() {
@@ -47,30 +31,7 @@ public class BullsAndCows extends AbstractMastermindGame {
             return false;
         }
     }
-
-    public void startNewRound(){
-        secretCode = generateSecretCode();
-        return ;
-    }
-
-    public Code bestTrial() {
-        Code bestTrial = null;
-        int bestScore = -1;
-        for (Code trial : trials.keySet()) {
-            int[] matchResults = trial.howManyCorrect(secretCode);
-            int currentScore = (matchResults[0] * 10) + matchResults[1];
-            if (currentScore > bestScore) {
-                bestScore = currentScore;
-                bestTrial = trial;
-            }
-            if( currentScore == bestScore) {
-                if( trial.toString().compareTo( bestTrial.toString()) < 0 ) {
-                    bestTrial = trial;
-                }
-            }   
-    }
-        return bestTrial;
-    }
+    
 
     public String toString() {
         String message = "Number of Trials = " + getNumberOfTrials() + "\n" +

@@ -35,14 +35,11 @@ public class MultiColourMastermindGame extends AbstractMastermindGame {
 
     @Override
     public boolean updateScore() {
-        if (!isRoundFinished()) {
-            return false;
-        }
 
         int incrementedScore = 0;
         int attempts = getNumberOfTrials();
 
-        if (attempts <= 2) {
+        if (attempts <= 2 ) {
             incrementedScore = 100;
         } else if (attempts <= 5) {
             incrementedScore = 50;

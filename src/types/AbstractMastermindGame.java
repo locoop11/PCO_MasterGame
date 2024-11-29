@@ -33,18 +33,22 @@ public abstract class AbstractMastermindGame implements MastermindGame {
         if (secretCode == null) {
             startNewRound();
         }
-        int[] matchResults = trialCode.howManyCorrect(secretCode);
-        if (matchResults[0] == getSize()) {
-            revealSecret();
+        if (secretRevealed == false) {
+            int[] matchResults = trialCode.howManyCorrect(secretCode);
+            incrementTrials(trialCode, matchResults);
+            if (matchResults[0] == getSize()) {
+                revealSecret();
+            }
         }
-        
-        incrementTrials(trialCode, matchResults);  
     }
 
 
     public void startNewRound(){
         secretCode = generateSecretCode();
-        return ;
+        secretRevealed = false;
+        numberOfTrials = 0;
+        trials.clear();
+        orderOfPlays.clear();
     }
 
     public Colour hint() {
@@ -89,8 +93,10 @@ public abstract class AbstractMastermindGame implements MastermindGame {
 
 
     protected void revealSecret() {
-        secretRevealed = true;
-        updateScore();
+        if (secretRevealed == false) {
+            secretRevealed = true;
+            updateScore();
+        }
     }
 
     @Override

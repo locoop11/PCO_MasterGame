@@ -1,6 +1,6 @@
 package types;
 
-import java.util.*;
+import java.util.List;
 
 public class MultiColourMastermindGame extends AbstractMastermindGame {
     private int numberOfHintsUsed; // Contador de ajudas dadas na ronda atual
@@ -14,13 +14,16 @@ public class MultiColourMastermindGame extends AbstractMastermindGame {
 
     @Override
     public void play(Code trial) {
-        //incrementTrials();
-        // Verifica se o trial corresponde ao código secreto
-        if (trial.equals(secretCode)) {
+        if (secretCode == null) {
+            startNewRound();
+        }
+    
+        int[] feedback = calculateFeedback(trial);
+        incrementTrials(trial, feedback);
+    
+        // Verifica se o código foi acertado
+        if (feedback[0] == getSize()) {
             revealSecret();
-        } else {
-            // Armazena o trial e os resultados no mapa de tentativas
-            trials.put(trial, calculateFeedback(trial));
         }
     }
 
@@ -54,26 +57,20 @@ public class MultiColourMastermindGame extends AbstractMastermindGame {
 
     @Override
     public boolean updateScore() {
-        if (!isRoundFinished()) {
-            return false;
+        if (wasSecretRevealed()) {
+            // Se o código foi decifrado, define uma pontuação alta
+            int baseScore = 2000; // A pontuação inicial é 2000 para a vitória
+            int attempts = getNumberOfTrials();
+    
+            // Reduz a pontuação com base nas dicas usadas
+            baseScore /= (numberOfHintsUsed + 1);
+    
+            // Define o score final
+            this.score = baseScore;
+            return true;
         }
-
-        int baseScore;
-        int attempts = getNumberOfTrials();
-
-        if (attempts <= 2) {
-            baseScore = 100;
-        } else if (attempts <= 5) {
-            baseScore = 50;
-        } else {
-            baseScore = 20;
-        }
-
-        // Reduz o score com base nas ajudas usadas
-        baseScore /= (numberOfHintsUsed + 1);
-
-        //setScore(score() + baseScore);
-        return true;
+    
+        return false;
     }
 
     @Override
@@ -108,7 +105,19 @@ public class MultiColourMastermindGame extends AbstractMastermindGame {
 
     @Override
     public Code bestTrial() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'bestTrial'");
+        Code bestTrial = null;
+        int bestScore = -1;
+        for (Code trial : trials.keySet()) {
+            int[] feedback = trials.get(trial); // Obtém o feedback (corretas e posição correta)
+            int currentScore = (feedback[0] * 10) + feedback[1]; // Calcula a pontuação: 10 pontos para corretas na posição certa, 1 ponto para cores corretas na posição errada
+            if (currentScore > bestScore) {
+                bestScore = currentScore;
+                bestTrial = trial;
+            } else if (currentScore == bestScore && trial.toString().compareTo(bestTrial.toString()) < 0) {
+                // Se a pontuação for igual, escolhe o código que vem antes lexicograficamente
+                bestTrial = trial;
+            }
+        }
+        return bestTrial;
     }
 }

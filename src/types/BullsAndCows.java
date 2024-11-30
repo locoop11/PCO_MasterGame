@@ -73,7 +73,7 @@ public class BullsAndCows extends AbstractMastermindGame {
     }
 
     public String toString() {
-        String message = "Number of Trials = " + getNumberOfTrials() + "\n" +
+        String message = "Número de Tentativas = " + getNumberOfTrials() + "\n" +
                 "Score = " + score + "\n";
         message += super.toString() + "\n";
         for (Code codePlayed : orderOfPlays) {

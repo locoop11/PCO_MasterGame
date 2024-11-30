@@ -17,10 +17,10 @@ public class MultiColourMastermindGame extends AbstractMastermindGame {
         if (secretCode == null) {
             startNewRound();
         }
-    
+
         int[] feedback = calculateFeedback(trial);
         incrementTrials(trial, feedback);
-    
+
         // Verifica se o código foi acertado
         if (feedback[0] == getSize()) {
             revealSecret();
@@ -29,30 +29,13 @@ public class MultiColourMastermindGame extends AbstractMastermindGame {
 
     @Override
     public boolean isRoundFinished() {
-        if (wasSecretRevealed() || getNumberOfTrials() >= MAX_TRIALS) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    @Override
-    public void startNewRound() {
-        this.secretCode = generateSecretCode();
-        this.numberOfHintsUsed = 0;
-        trials.clear();
-        revealSecret();
+        return wasSecretRevealed() || getNumberOfTrials() >= MAX_TRIALS;
     }
 
     @Override
     public Colour hint() {
-        if (secretCode == null) {
-            startNewRound();
-        }
-        Colour hintColour = secretCode.getCode().get(random.nextInt(getSize()));
-        this.score /= 2;
         numberOfHintsUsed++;
-        return hintColour;
+        return super.hint();
     }
 
     @Override
@@ -61,46 +44,21 @@ public class MultiColourMastermindGame extends AbstractMastermindGame {
             // Se o código foi decifrado, define uma pontuação alta
             int baseScore = 2000; // A pontuação inicial é 2000 para a vitória
             int attempts = getNumberOfTrials();
-    
+
             // Reduz a pontuação com base nas dicas usadas
             baseScore /= (numberOfHintsUsed + 1);
-    
+
             // Define o score final
             this.score = baseScore;
             return true;
         }
-    
+
         return false;
     }
 
     @Override
     public int score() {
         return score;
-    }
-
-    private int[] calculateFeedback(Code trial) {
-        // Implementação do cálculo de feedback: combinação de cores certas e posições certas
-        int correctPosition = 0;
-        int correctColour = 0;
-
-        List<Colour> secretColours = secretCode.getCode();
-        List<Colour> trialColours = trial.getCode();
-
-        // Verifica posições corretas
-        for (int i = 0; i < getSize(); i++) {
-            if (trialColours.get(i).equals(secretColours.get(i))) {
-                correctPosition++;
-            }
-        }
-
-        // Verifica cores corretas (independente da posição)
-        for (Colour colour : trialColours) {
-            if (secretColours.contains(colour)) {
-                correctColour++;
-            }
-        }
-
-        return new int[]{correctPosition, correctColour - correctPosition};
     }
 
     @Override
@@ -119,5 +77,29 @@ public class MultiColourMastermindGame extends AbstractMastermindGame {
             }
         }
         return bestTrial;
+    }
+
+    private int[] calculateFeedback(Code trial) {
+        int correctPosition = 0;
+        int correctColour = 0;
+
+        List<Colour> secretColours = secretCode.getCode();
+        List<Colour> trialColours = trial.getCode();
+
+        // Verifica posições corretas
+        for (int i = 0; i < getSize(); i++) {
+            if (trialColours.get(i).equals(secretColours.get(i))) {
+                correctPosition++;
+            }
+        }
+
+        // Verifica cores corretas (mas em posições erradas)
+        for (Colour colour : trialColours) {
+            if (secretColours.contains(colour)) {
+                correctColour++;
+            }
+        }
+
+        return new int[]{correctPosition, correctColour - correctPosition};
     }
 }

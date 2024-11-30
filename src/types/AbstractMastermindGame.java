@@ -33,7 +33,35 @@ public abstract class AbstractMastermindGame implements MastermindGame {
         this.orderOfPlays = new ArrayList<Code>();
     }
 
+    public void play (Code trialCode){
+        if (secretCode == null) {
+            startNewRound();
+        }
+        if (secretRevealed == false) {
+            int[] matchResults = trialCode.howManyCorrect(secretCode);
+            incrementTrials(trialCode, matchResults);
+            if (matchResults[0] == getSize()) {
+                revealSecret();
+            }
+        }
+    }
 
+
+    public void startNewRound(){
+        secretCode = generateSecretCode();
+        secretRevealed = false;
+        numberOfTrials = 0;
+        trials.clear();
+        orderOfPlays.clear();
+    }
+
+    public Colour hint() {
+        if (secretCode == null) {
+            startNewRound();
+        }
+        Colour hintColour = secretCode.getCode().get(random.nextInt(getSize()));
+        return hintColour;
+    }
 
     public int getSize() {
         return size;
@@ -72,8 +100,10 @@ public abstract class AbstractMastermindGame implements MastermindGame {
 
 
     protected void revealSecret() {
-        secretRevealed = true;
-        updateScore();
+        if (secretRevealed == false) {
+            secretRevealed = true;
+            updateScore();
+        }
     }
 
     @Override
@@ -117,18 +147,29 @@ public abstract class AbstractMastermindGame implements MastermindGame {
         return message;
     }
 
-    // Abstract methods to be implemented by subclasses
-    public abstract void play(Code trial);
 
-    public abstract boolean isRoundFinished();
-
-    public abstract void startNewRound();
-
-    public abstract Code bestTrial();
-
-    public abstract Colour hint();
-
+    public Code bestTrial() {
+        Code bestTrial = null;
+        int bestScore = -1;
+        for (Code trial : trials.keySet()) {
+            int[] matchResults = trial.howManyCorrect(secretCode);
+            int currentScore = (matchResults[0] * 10) + matchResults[1];
+            if (currentScore > bestScore) {
+                bestScore = currentScore;
+                bestTrial = trial;
+            }
+            if( currentScore == bestScore) {
+                if( trial.toString().compareTo( bestTrial.toString()) < 0 ) {
+                    bestTrial = trial;
+                }
+            }   
+    }
+        return bestTrial;
+    }
+    
     public abstract boolean updateScore();
 
     public abstract int score();
+
+    public abstract boolean isRoundFinished();
 }

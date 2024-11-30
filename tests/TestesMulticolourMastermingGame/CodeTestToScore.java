@@ -145,7 +145,7 @@ class CodeTestToScore {
 		jogo.play(tentativa);
 
 		trial.clear();
-		trial.add(MultiColour.BLUE);
+		trial.add(MultiColour.BLUE);  //codigo certo
 		trial.add(MultiColour.PINK);
 		trial.add(MultiColour.RED);
 		trial.add(MultiColour.ORANGE);
@@ -226,7 +226,7 @@ class CodeTestToScore {
 
 		trial.clear();
 		trial.add(MultiColour.BLUE);
-		trial.add(MultiColour.PINK);
+		trial.add(MultiColour.PINK);  //codigo certo
 		trial.add(MultiColour.RED);
 		trial.add(MultiColour.ORANGE);
 

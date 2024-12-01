@@ -11,7 +11,7 @@ import types.MultiColour;
 import types.MultiColourMastermindGame;
 
 public class Main {
-    private static SortedMap<String, String> mainMenuOptions = new TreeMap<>(Map.of(new String("1"), "Bulls and Cows (Código binário)", new String("2"), "Mastermind (Código multicolor)", new String("q"), "Quit"));
+    private static SortedMap<String, String> mainMenuOptions = new TreeMap<>(Map.of(new String("1"), "Bulls and Cows (Código binário)", new String("2"), "Mastermind (Código multicolor)", new String("e"), "Exit"));
     private static SortedMap<String, String> gameOptions = new TreeMap<>(Map.of(new String("1"), "Make a guess", new String("2"), "Hint", new String("e"), "Exit Game"));
     private final static int CODE_SIZE = 4;
 
@@ -58,11 +58,11 @@ public class Main {
                     currentScreen = multicolorUi;
                     gameLoop(game, currentScreen, scanner, colours);
                     break;
-                case "q":
+                case "e":
                     validChoice = true;
                     break;
                 default:
-                    mainMenuUi.setError("Escolha inválida. Tente novamente:");
+                    mainMenuUi.setError("Opcao inválida. Tente novamente (1, 2, e):");
             }
         }
 
@@ -96,7 +96,7 @@ public class Main {
                     break;
 
                 default:
-                    currentScreen.setError("Escolha inválida. Tente novamente:");
+                    currentScreen.setError("Opcao inválida. Tente novamente (1, 2, e):");
             }
         }
 

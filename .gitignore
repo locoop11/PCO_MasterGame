@@ -1,6 +1,6 @@
 *.class
 /.metadata/
+/.vscode/
+/.settings/
 .DS_Store
-/bin/*
-settings.json
-.vscode/*
+/bin/

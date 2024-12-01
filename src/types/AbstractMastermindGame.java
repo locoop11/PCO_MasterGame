@@ -1,11 +1,6 @@
 package types;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 
 
@@ -25,10 +20,11 @@ public abstract class AbstractMastermindGame implements MastermindGame {
         this.size = size;
         this.colours = colours;
         this.trials = new HashMap<Code, int[]>();
-    
-        // Use nanoTime para gerar uma semente única a cada execução
-        this.random = new Random(System.nanoTime());
-    
+        if ( seed == -1 ) {
+            this.random = new Random();
+        } else {
+            this.random = new Random(seed);
+        }
         this.secretCode = null;
         this.orderOfPlays = new ArrayList<Code>();
     }
@@ -69,14 +65,12 @@ public abstract class AbstractMastermindGame implements MastermindGame {
 
 
     protected Code generateSecretCode() {
-    Colour[] codeColours = new Colour[size];
-    for (int i = 0; i < size; i++) {
-        codeColours[i] = colours[random.nextInt(colours.length)];
+        Colour[] codeColours = new Colour[size];
+        for (int i = 0; i < size; i++) {
+            codeColours[i] = colours[random.nextInt(colours.length)];
+        }
+        return new Code(List.of(codeColours));
     }
-
-    return new Code(List.of(codeColours));
-}
-
 
     @Override
     public int getNumberOfTrials() {
@@ -88,15 +82,14 @@ public abstract class AbstractMastermindGame implements MastermindGame {
         return secretRevealed;
     }
 
-    protected void incrementTrials(Code trialCode, int[] matchResults) {
+    protected void incrementTrials(Code trialCode, int [] matchResults) {
         numberOfTrials++;
-        if (trials.containsKey(trialCode)) {
-            return; // Não registra novamente se já existe
+        if( trials.containsKey(trialCode)) {
+            return;
         }
-        trials.put(trialCode, matchResults);      // Armazena o resultado do feedback
-        orderOfPlays.add(trialCode);              // Registra a ordem da tentativa
+        trials.put(trialCode, matchResults);
+        orderOfPlays.add(trialCode);
     }
-    
 
 
     protected void revealSecret() {
@@ -108,31 +101,14 @@ public abstract class AbstractMastermindGame implements MastermindGame {
 
     @Override
     public String toString() {
-        StringBuilder message = new StringBuilder();
-    
-        // Exibir código secreto (revelado ou oculto)
-        if (wasSecretRevealed()) {
-            message.append(secretCode.toString()).append("\n");
+        String message = "";
+
+        if (secretRevealed) {
+            message += secretCode.toString() + "\n";
         } else {
-            message.append("[");
-            for (int i = 0; i < size; i++) {
-                if (i == size - 1) {
-                    message.append("?"); // Não adiciona vírgula após o último elemento
-                } else {
-                    message.append("?, ");
-                }
-            }
-            message.append("]\n"); // Fecha os colchetes corretamente
+            message += unrevealedSecretCodeToString() + "\n";
         }
-    
-        // Mostrar todas as tentativas e os respectivos resultados
-        for (Code codePlayed : orderOfPlays) {
-            message.append(codePlayed.toString()).append("    ");
-            int[] results = trials.get(codePlayed);
-            message.append(results[0]).append(" ").append(results[1]).append("\n");
-        }
-    
-        return message.toString();
+        return message;
     }
 
     private String unrevealedSecretCodeToString() {

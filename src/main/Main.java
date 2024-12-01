@@ -42,12 +42,12 @@ public class Main {
             System.out.println("Digite seu palpite (cores: b r o p g y):");
         } else {
             System.out.println("Escolha inválida. O jogo será encerrado.");
+            scanner.close();
             return; // Sai do programa se a escolha for inválida
         }
 
         // Loop principal do jogo
         boolean roundFinished = false;
-        Code bestTrial = null;
 
         while (!roundFinished) {
             System.out.println(game.toString());
@@ -77,9 +77,7 @@ public class Main {
         // Mostrar o resultado final
         
         System.out.println("Pontuação final: " + game.score());
-        if (bestTrial != null) {
-            System.out.println("Código: " + bestTrial);
-        }
+        scanner.close(); // Fechar o scanner
     }
 
     
